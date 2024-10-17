@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { datasourceOptions as coreApiDataSourceOptions } from './configuration/orm.configuration';
 import { DataSource } from 'typeorm';
 import { UserModule } from './modules/user/user.module';
+import { MessageModule } from './modules/message/message.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { UserModule } from './modules/user/user.module';
       },
     }),
     UserModule,
+    MessageModule,
+    ChatModule,
   ],
 })
 export class AppModule {}
