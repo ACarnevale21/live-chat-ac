@@ -6,6 +6,7 @@ import {
 import { CreateUserDto } from '../dto/request/create-user.dto';
 import { MapperService } from '@/common/application/mapper/mapper.service';
 import { UserDomain } from '../../domain/user.domain';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -16,10 +17,17 @@ export class UserService {
   ) {}
 
   async create(userInformation: CreateUserDto): Promise<UserDomain> {
+    const passwordEncrypted = await bcrypt.hash(userInformation.password, 10);
+
+    userInformation.password = passwordEncrypted;
     const userDomain = this.mapperService.dtoToClass(
       userInformation,
       new UserDomain(),
     );
     return await this.userRepository.create(userDomain);
+  }
+
+  async findOne(username: string): Promise<UserDomain | undefined> {
+    return await this.userRepository.findOne(username);
   }
 }
