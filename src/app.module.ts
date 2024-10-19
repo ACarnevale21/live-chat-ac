@@ -8,7 +8,7 @@ import { DataSource } from 'typeorm';
 import { UserModule } from './modules/user/user.module';
 import { MessageModule } from './modules/message/message.module';
 import { ChatModule } from './modules/chat/chat.module';
-import { AuthController } from './modules/auth/application/controller/auth.controller';
+import { AuthController } from './modules/auth/controller/auth.controller';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({

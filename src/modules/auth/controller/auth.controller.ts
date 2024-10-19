@@ -1,9 +1,9 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from '../service/auth.service';
-import { SignInDto } from '../dto/sign-in.dto';
-import { AuthType } from '../../domain/auth-type.enum';
-import { Auth } from '../../infrastructure/decorator/auth.decorator';
-import { SignUpDto } from '../dto/sign-up.dto';
+import { AuthService } from '../application/service/auth.service';
+import { SignInDto } from '../application/dto/sign-in.dto';
+import { AuthType } from '../domain/auth-type.enum';
+import { Auth } from '../infrastructure/decorator/auth.decorator';
+import { SignUpDto } from '../application/dto/sign-up.dto';
 
 @Auth(AuthType.None)
 @Controller('auth')
