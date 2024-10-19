@@ -20,23 +20,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly messageService: MessageService,
   ) {}
 
-  // Manejar la conexión de un cliente
   async handleConnection(client: Socket) {
     console.log(`Cliente conectado: ${client.id}`);
   }
 
-  // Manejar la desconexión de un cliente
   handleDisconnect(client: Socket) {
     this.chatConnectionService.unregisterUser(client);
   }
 
-  // Manejar el registro de usuarios
   @SubscribeMessage('register')
   handleRegister(client: Socket, username: string) {
     this.chatConnectionService.registerUser(username, client);
   }
 
-  // Manejar los mensajes enviados
   @SubscribeMessage('message')
   async handleMessage(
     client: Socket,
@@ -47,7 +43,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       payload.message,
     );
 
-    // Si es un mensaje privado
     if (payload.message.startsWith('/private')) {
       const [_, targetUser, ...messageParts] = payload.message.split(' ');
       const message = messageParts.join(' ');
@@ -58,7 +53,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client,
       );
     } else {
-      // Si es un mensaje público
       this.chatMessagingService.sendPublicMessage(savedMessage, this.server);
     }
   }

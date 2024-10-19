@@ -20,4 +20,12 @@ export class UserPostgreSQLRepository implements IUserRepository {
       throw new Error(e.message);
     }
   }
+
+  async findOne(username: string): Promise<UserEntity | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { username } });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
 }

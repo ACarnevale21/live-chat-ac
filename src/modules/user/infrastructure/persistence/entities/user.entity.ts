@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'user' })
 export class UserEntity extends Base {
   @Column()
-  name: string;
+  username: string;
 
   @Column()
   email: string;
