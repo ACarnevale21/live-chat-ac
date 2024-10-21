@@ -9,6 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthType } from '../../domain/auth-type.enum';
 import { AUTH_TYPE_KEY } from '../decorator/auth.decorator';
 import { AccessTokenGuard } from './access-token.guard';
+import { RefreshTokenGuard } from './refresh-token.guard';
 
 type AuthTypeGuardMap = Record<AuthType, CanActivate | CanActivate[]>;
 
@@ -18,12 +19,14 @@ export class AuthenticationGuard implements CanActivate {
 
   private readonly authTypeGuardMap: AuthTypeGuardMap = {
     [AuthType.Bearer]: this.accessTokenGuard,
+    [AuthType.Refresh]: this.refreshTokenGuard,
     [AuthType.None]: { canActivate: () => true },
   };
 
   constructor(
     private readonly reflector: Reflector,
     private readonly accessTokenGuard: AccessTokenGuard,
+    private readonly refreshTokenGuard: RefreshTokenGuard,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

@@ -1,5 +1,5 @@
 import { Base } from '@/common/infrastructure/entities/base.entity';
-import { MessageEntity } from '@/modules/message/infrastructure/persistence/entities/message.entity';
+import { AuthEntity } from '@/modules/auth/infrastructure/persistence/entities/auth.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -13,6 +13,6 @@ export class UserEntity extends Base {
   @Column({ unique: true })
   email: string;
 
-  @OneToMany(() => MessageEntity, (messageEntity) => messageEntity.user)
-  messages: MessageEntity[];
+  @OneToMany(() => AuthEntity, (refreshToken) => refreshToken.user)
+  refreshTokens: AuthEntity[];
 }

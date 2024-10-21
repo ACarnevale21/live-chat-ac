@@ -45,9 +45,21 @@ export class UserPostgreSQLRepository implements IUserRepository {
     }
   }
 
-  async findOneByEmail(email: string): Promise<UserEntity | undefined> {
+  async update(
+    id: number,
+    updatedUserInformation: Partial<UserDomain>,
+  ): Promise<UserEntity> {
     try {
-      return await this.userRepository.findOne({ where: { email } });
+      const userUpdate = await this.userRepository.preload({
+        id,
+        ...updatedUserInformation,
+      });
+
+      if (!userUpdate) {
+        throw new Error(`user #${id} do not exist`);
+      }
+
+      return await this.userRepository.save(userUpdate);
     } catch (e) {
       throw new Error(e.message);
     }
