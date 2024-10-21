@@ -1,5 +1,6 @@
 import { Base } from '@/common/infrastructure/entities/base.entity';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { AuthEntity } from '@/modules/auth/infrastructure/persistence/entities/auth.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity extends Base {
@@ -11,4 +12,7 @@ export class UserEntity extends Base {
 
   @Column()
   password: string;
+
+  @OneToMany(() => AuthEntity, (refreshToken) => refreshToken.user)
+  refreshTokens: AuthEntity[];
 }

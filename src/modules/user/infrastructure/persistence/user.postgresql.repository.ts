@@ -28,4 +28,32 @@ export class UserPostgreSQLRepository implements IUserRepository {
       throw new Error(e.message);
     }
   }
+
+  async findOneById(userId: number): Promise<UserEntity | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { id: userId } });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async update(
+    id: number,
+    updatedUserInformation: Partial<UserDomain>,
+  ): Promise<UserEntity> {
+    try {
+      const userUpdate = await this.userRepository.preload({
+        id,
+        ...updatedUserInformation,
+      });
+
+      if (!userUpdate) {
+        throw new Error(`user #${id} do not exist`);
+      }
+
+      return await this.userRepository.save(userUpdate);
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
 }

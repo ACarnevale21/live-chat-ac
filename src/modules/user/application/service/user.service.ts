@@ -7,6 +7,8 @@ import { CreateUserDto } from '../dto/request/create-user.dto';
 import { MapperService } from '@/common/application/mapper/mapper.service';
 import { UserDomain } from '../../domain/user.domain';
 import * as bcrypt from 'bcrypt';
+import { UpdateUserDto } from '../dto/request/update-user.dto';
+import { fromUpdateUserToUserDomain } from '../mapper/user.mapper';
 
 @Injectable()
 export class UserService {
@@ -29,5 +31,17 @@ export class UserService {
 
   async findOne(username: string): Promise<UserDomain | undefined> {
     return await this.userRepository.findOne(username);
+  }
+
+  async findOneById(userId: number): Promise<UserDomain | undefined> {
+    return await this.userRepository.findOneById(userId);
+  }
+
+  async update(
+    userId: number,
+    updatedUserInformation: UpdateUserDto,
+  ): Promise<any> {
+    const userMapped = fromUpdateUserToUserDomain(updatedUserInformation);
+    return await this.userRepository.update(userId, userMapped);
   }
 }

@@ -7,7 +7,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './infrastructure/guard/authentication.guard';
 import { PassportModule } from '@nestjs/passport';
 import { AccessTokenGuard } from './infrastructure/guard/access-token.guard';
-import { JwtStrategy } from './infrastructure/passport/jwt.strategy';
+import { AtStrategy } from './infrastructure/passport/at.strategy';
+import { RtStrategy } from './infrastructure/passport/rt.strategy';
+import { AUTH_REPOSITORY } from './application/interface/auth.repository';
+import { AuthPostgreSQLRepository } from './infrastructure/persistence/auth.postgresql.repository';
+import { AuthEntity } from './infrastructure/persistence/entities/auth.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RefreshTokenGuard } from './infrastructure/guard/refresh-token.guard';
 
 @Module({
   imports: [
@@ -15,18 +21,25 @@ import { JwtStrategy } from './infrastructure/passport/jwt.strategy';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '1h' },
     }),
     PassportModule,
+    TypeOrmModule.forFeature([AuthEntity], process.env.DB_NAME),
   ],
   providers: [
     AuthService,
     AccessTokenGuard,
+    RefreshTokenGuard,
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
     },
-    JwtStrategy,
+    {
+      provide: AUTH_REPOSITORY,
+      useClass: AuthPostgreSQLRepository,
+    },
+    AtStrategy,
+    RtStrategy,
   ],
   controllers: [AuthController],
   exports: [AuthService],
