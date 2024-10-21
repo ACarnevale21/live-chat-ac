@@ -20,6 +20,5 @@ import { USER_REPOSITORY } from './application/interface/user.repository.interfa
       useClass: UserPostgreSQLRepository,
     },
   ],
-  exports: [UserService],
 })
 export class UserModule {}
