@@ -41,7 +41,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     const { username, password } = loginDto;
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOneByUsername(username);
 
     if (!user) {
       throw new UnauthorizedException();
@@ -62,7 +62,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto): Promise<RegisterResponseDto> {
-    const user = await this.userService.findOne(registerDto.username);
+    const user = await this.userService.findOneByUsername(registerDto.username);
     if (user) {
       throw new BadGatewayException('User already exists');
     }
