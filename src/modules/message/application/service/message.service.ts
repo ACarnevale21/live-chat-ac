@@ -12,8 +12,8 @@ export class MessageService {
     private readonly messageRepository: IMessageRepository,
   ) {}
 
-  async saveMessage(userId: number, content: string): Promise<MessageDomain> {
-    return this.messageRepository.saveMessage(userId, content);
+  async saveMessage(user: string, content: string): Promise<MessageDomain> {
+    return this.messageRepository.saveMessage(user, content);
   }
 
   async getAllMessages(): Promise<MessageDomain[]> {

@@ -29,25 +29,17 @@ export class UserPostgreSQLRepository implements IUserRepository {
     }
   }
 
-  async findOneById(id: number): Promise<UserEntity> {
+  async findOneById(id: number): Promise<UserEntity | undefined> {
     try {
-      return await this.userRepository.findOneOrFail({ where: { id } });
+      return await this.userRepository.findOne({ where: { id } });
     } catch (e) {
       throw new Error(e.message);
     }
   }
 
-  async findOneByUsername(username: string): Promise<UserEntity> {
+  async findOneByUsername(username: string): Promise<UserEntity | undefined> {
     try {
-      return await this.userRepository.findOneOrFail({ where: { username } });
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  }
-
-  async findOneByEmail(email: string): Promise<UserEntity> {
-    try {
-      return await this.userRepository.findOneOrFail({ where: { email } });
+      return await this.userRepository.findOne({ where: { username } });
     } catch (e) {
       throw new Error(e.message);
     }
