@@ -3,6 +3,6 @@ import { MessageEntity } from '../../infrastructure/persistence/entities/message
 export const MESSAGE_REPOSITORY = 'MESSAGE_REPOSITORY';
 
 export interface IMessageRepository {
-  saveMessage(userId: number, content: string): Promise<MessageEntity>;
+  saveMessage(user: string, content: string): Promise<MessageEntity>;
   getAllMessages(): Promise<MessageEntity[]>;
 }
