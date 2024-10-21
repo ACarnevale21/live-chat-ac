@@ -45,6 +45,14 @@ export class UserPostgreSQLRepository implements IUserRepository {
     }
   }
 
+  async findOneByEmail(email: string): Promise<UserEntity | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { email } });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
   async update(
     id: number,
     updatedUserInformation: Partial<UserDomain>,

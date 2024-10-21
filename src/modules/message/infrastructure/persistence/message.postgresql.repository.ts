@@ -11,9 +11,9 @@ export class MessagePostgreSQLRepository implements IMessageRepository {
     private readonly messageRepository: Repository<MessageEntity>,
   ) {}
 
-  async saveMessage(user: string, content: string): Promise<MessageEntity> {
+  async saveMessage(userId: number, content: string): Promise<MessageEntity> {
     try {
-      const messageEntity = this.messageRepository.create({ user, content });
+      const messageEntity = this.messageRepository.create({ userId, content });
       return await this.messageRepository.save(messageEntity);
     } catch (e) {
       throw new Error(e.message);
