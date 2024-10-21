@@ -5,6 +5,9 @@ import { UserEntity } from '@/modules/user/infrastructure/persistence/entities/u
 
 @Entity({ name: 'messages' })
 export class MessageEntity extends Base {
+  @Column()
+  userId: number;
+
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.messages, {
     cascade: true,
     onDelete: 'CASCADE',
