@@ -5,5 +5,8 @@ export const USER_REPOSITORY = 'USER_REPOSITORY';
 
 export interface IUserRepository {
   create(userInformation: UserDomain): Promise<UserEntity>;
-  findOne(username: string): Promise<UserEntity | undefined>;
+  findAll(): Promise<UserEntity[]>;
+  findOneById(id: number): Promise<UserEntity | undefined>;
+  findOneByUsername(username: string): Promise<UserEntity | undefined>;
+  findOneByEmail(email: string): Promise<UserEntity | undefined>;
 }

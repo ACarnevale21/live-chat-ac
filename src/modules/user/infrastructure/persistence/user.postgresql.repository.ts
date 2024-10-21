@@ -21,9 +21,33 @@ export class UserPostgreSQLRepository implements IUserRepository {
     }
   }
 
-  async findOne(username: string): Promise<UserEntity | undefined> {
+  async findAll(): Promise<UserEntity[]> {
+    try {
+      return await this.userRepository.find();
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async findOneById(id: number): Promise<UserEntity | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { id } });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async findOneByUsername(username: string): Promise<UserEntity | undefined> {
     try {
       return await this.userRepository.findOne({ where: { username } });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async findOneByEmail(email: string): Promise<UserEntity | undefined> {
+    try {
+      return await this.userRepository.findOne({ where: { email } });
     } catch (e) {
       throw new Error(e.message);
     }

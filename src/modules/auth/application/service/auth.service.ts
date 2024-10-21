@@ -17,11 +17,11 @@ export class AuthService {
 
   async signIn(
     username: string,
-    pass: string,
+    password: string,
   ): Promise<{ access_token: string }> {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOneByUsername(username);
 
-    const isMatch = await bcrypt.compare(pass, user?.password);
+    const isMatch = await bcrypt.compare(password, user?.password);
     if (!isMatch) {
       throw new UnauthorizedException();
     }
@@ -33,7 +33,10 @@ export class AuthService {
   }
 
   async signUp(signUpData: SignUpDto): Promise<any> {
-    const user = await this.userService.findOne(signUpData.username);
+    const user = await this.userService.isUserExist(
+      signUpData.username,
+      signUpData.email,
+    );
     if (user) {
       throw new BadGatewayException('User already exists');
     }

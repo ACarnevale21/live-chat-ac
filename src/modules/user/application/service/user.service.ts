@@ -27,7 +27,26 @@ export class UserService {
     return await this.userRepository.create(userDomain);
   }
 
-  async findOne(username: string): Promise<UserDomain | undefined> {
-    return await this.userRepository.findOne(username);
+  async findAll(): Promise<UserDomain[]> {
+    return await this.userRepository.findAll();
+  }
+
+  async findOneById(id: number): Promise<UserDomain | undefined> {
+    return await this.userRepository.findOneById(id);
+  }
+
+  async findOneByUsername(username: string): Promise<UserDomain | undefined> {
+    return await this.userRepository.findOneByUsername(username);
+  }
+
+  async findOneByEmail(email: string): Promise<UserDomain | undefined> {
+    return await this.userRepository.findOneByEmail(email);
+  }
+
+  async isUserExist(username: string, email: string): Promise<boolean> {
+    const userByUsername = await this.findOneByUsername(username);
+    const userByEmail = await this.findOneByEmail(email);
+
+    return userByUsername || userByEmail ? true : false;
   }
 }
