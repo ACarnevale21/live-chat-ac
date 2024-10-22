@@ -55,7 +55,7 @@ export class UserService {
   async update(
     userId: number,
     updatedUserInformation: UpdateUserDto,
-  ): Promise<any> {
+  ): Promise<UserDomain> {
     const userMapped = fromUpdateUserToUserDomain(updatedUserInformation);
     return await this.userRepository.update(userId, userMapped);
   }

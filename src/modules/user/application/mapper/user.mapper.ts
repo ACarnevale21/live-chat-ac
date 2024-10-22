@@ -8,5 +8,6 @@ export function fromUpdateUserToUserDomain(
     username: updateUser.username,
     email: updateUser.email,
     password: updateUser.password,
+    state: updateUser.state,
   };
 }

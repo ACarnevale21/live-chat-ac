@@ -1,25 +1,19 @@
+import { CustomSocket } from '@/modules/auth/application/interface/socket-custom.interface';
+import { UserState } from '@/modules/user/application/enum/user-state.enum';
+import { UserService } from '@/modules/user/application/service/user.service';
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 
 @Injectable()
 export class ChatConnectionService {
-  private users: Map<string, Socket> = new Map();
-
-  registerUser(username: string, client: Socket) {
-    this.users.set(username, client);
-    console.log(`${username} se ha registrado con el socket ${client.id}`);
+  constructor(private readonly userService: UserService) {}
+  async registerUser(userId: number, client: Socket) {
+    return this.userService.update(userId, { state: UserState.ONLINE });
   }
 
-  unregisterUser(client: Socket) {
-    this.users.forEach((socket, username) => {
-      if (socket.id === client.id) {
-        this.users.delete(username);
-        console.log(`Usuario ${username} desconectado`);
-      }
+  unregisterUser(userId: number, client: Socket) {
+    return this.userService.update(userId, {
+      state: UserState.OFFLINE,
     });
-  }
-
-  getUserSocket(username: string): Socket | undefined {
-    return this.users.get(username);
   }
 }

@@ -14,6 +14,7 @@ import { AuthPostgreSQLRepository } from './infrastructure/persistence/auth.post
 import { AuthEntity } from './infrastructure/persistence/entities/auth.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RefreshTokenGuard } from './infrastructure/guard/refresh-token.guard';
+import { WsGuard } from './infrastructure/guard/gateway.guard';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { RefreshTokenGuard } from './infrastructure/guard/refresh-token.guard';
     AuthService,
     AccessTokenGuard,
     RefreshTokenGuard,
+    WsGuard,
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,

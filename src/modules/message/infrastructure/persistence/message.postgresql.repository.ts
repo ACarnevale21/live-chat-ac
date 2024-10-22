@@ -3,6 +3,7 @@ import { IMessageRepository } from '../../application/interface/message.reposito
 import { MessageEntity } from './entities/message.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MessageDomain } from '../../domain/message.domain';
 
 @Injectable()
 export class MessagePostgreSQLRepository implements IMessageRepository {
@@ -11,9 +12,9 @@ export class MessagePostgreSQLRepository implements IMessageRepository {
     private readonly messageRepository: Repository<MessageEntity>,
   ) {}
 
-  async saveMessage(userId: number, content: string): Promise<MessageEntity> {
+  async saveMessage(payload: MessageDomain): Promise<MessageEntity> {
     try {
-      const messageEntity = this.messageRepository.create({ userId, content });
+      const messageEntity = this.messageRepository.create(payload);
       return await this.messageRepository.save(messageEntity);
     } catch (e) {
       throw new Error(e.message);

@@ -7,53 +7,38 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatConnectionService } from '../../application/service/chat-connection.service';
-import { ChatMessagingService } from '../../application/service/chat-messaging.service';
 import { MessageService } from '@/modules/message/application/service/message.service';
+import { UseGuards } from '@nestjs/common';
+import { WsGuard } from '@/modules/auth/infrastructure/guard/gateway.guard';
+import { NewMessageDto } from '@/modules/message/application/dto/new-message.dto';
+import { CustomSocket } from '@/modules/auth/application/interface/socket-custom.interface';
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({ cors: { origin: '*' } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   constructor(
     private readonly chatConnectionService: ChatConnectionService,
-    private readonly chatMessagingService: ChatMessagingService,
     private readonly messageService: MessageService,
   ) {}
 
   async handleConnection(client: Socket) {
-    console.log(`Cliente conectado: ${client.id}`);
+    this.server.emit('newConnection', `${client.id} is Online`);
   }
 
-  handleDisconnect(client: Socket) {
-    this.chatConnectionService.unregisterUser(client);
+  async handleDisconnect(client: Socket) {
+    this.server.emit('newDisconnection', `${client.id} is Offline`);
   }
 
-  @SubscribeMessage('register')
-  handleRegister(client: Socket, username: string) {
-    this.chatConnectionService.registerUser(username, client);
-  }
-
-  @SubscribeMessage('message')
-  async handleMessage(
-    client: Socket,
-    payload: { userId: number; message: string },
-  ) {
-    const savedMessage = await this.messageService.saveMessage(
-      payload.userId,
-      payload.message,
-    );
-    this.chatMessagingService.sendPublicMessage(savedMessage, this.server);
-    // if (payload.message.startsWith('/private')) {
-    //   const [_, targetUser, ...messageParts] = payload.message.split(' ');
-    //   const message = messageParts.join(' ');
-    //   this.chatMessagingService.sendPrivateMessage(
-    //     payload.user,
-    //     targetUser,
-    //     message,
-    //     client,
-    //   );
-    // } else {
-    //   this.chatMessagingService.sendPublicMessage(savedMessage, this.server);
-    // }
+  @UseGuards(WsGuard)
+  @SubscribeMessage('newMessage')
+  async handleEvent(
+    client: CustomSocket,
+    payload: NewMessageDto,
+  ): Promise<string> {
+    const userId = client.user.id;
+    const newMessage = await this.messageService.saveMessage(payload, userId);
+    this.server.emit('chat', payload);
+    return newMessage.content;
   }
 }

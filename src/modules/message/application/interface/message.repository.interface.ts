@@ -1,8 +1,9 @@
 import { MessageEntity } from '../../infrastructure/persistence/entities/message.entity';
+import { MessageDomain } from '../../domain/message.domain';
 
 export const MESSAGE_REPOSITORY = 'MESSAGE_REPOSITORY';
 
 export interface IMessageRepository {
-  saveMessage(userId: number, content: string): Promise<MessageEntity>;
+  saveMessage(payload: MessageDomain): Promise<MessageEntity>;
   getAllMessages(): Promise<MessageEntity[]>;
 }
